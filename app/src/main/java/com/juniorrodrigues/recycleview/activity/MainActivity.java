@@ -6,11 +6,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.juniorrodrigues.recycleview.R;
 import com.juniorrodrigues.recycleview.adapter.MeuAdapter;
 import com.juniorrodrigues.recycleview.model.FilmesModel;
+import com.juniorrodrigues.recycleview.ultils.RecyclerItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +46,44 @@ public class MainActivity extends AppCompatActivity {
         rvList.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
         //repassando o adapter
         rvList.setAdapter(adapter);
+
+        //Evento de click no RecyclerView
+        rvList.addOnItemTouchListener(
+                //Usaremos uma implementação disponibilizada pela propria google para criar o evento de click - por ser um pouco chatinho a google ja disponibiliza
+                new RecyclerItemClickListener(
+                        getApplicationContext(),//contexto
+                        rvList,//nosso recyclerView
+                        new RecyclerItemClickListener.OnItemClickListener() {//intanciando um novo evento de click
+                            @Override
+                            public void onItemClick(View view, int position) { //click curto
+
+                                FilmesModel filme = listaFilmes.get(position);
+
+                                Toast.makeText(getApplicationContext(),
+                                        "Item precionado: "+filme.getTitle(), //recupero o titulo do item diretamente
+                                        Toast.LENGTH_SHORT
+                                ).show();
+                            }
+
+                            @Override
+                            public void onLongItemClick(View view, int position) { //click longo
+
+                                FilmesModel filme = listaFilmes.get(position);
+
+                                Toast.makeText(getApplicationContext(),
+                                        "Click longo precionado na genero "+filme.getGenero(),
+                                        Toast.LENGTH_LONG
+                                ).show();
+                            }
+
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                            }
+                        }
+                )
+        );
+
     }
 
     //popula a lista de filmes
